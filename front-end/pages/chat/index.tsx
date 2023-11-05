@@ -8,7 +8,7 @@ const Chat = () => {
 
             {/*    </div>*/}
             {/*</div>*/}
-            <div className="relative h-screen">
+            <div className="relative h-screen p-4">
                     <h1 className="text-2xl font-bold mb-4">Chat#1</h1>
                     <div className="border border-gray-200 p-4 rounded-lg">
                     <div className="flex flex-col mt-5">
