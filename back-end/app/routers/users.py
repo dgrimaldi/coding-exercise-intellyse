@@ -12,24 +12,6 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-
-@router.get(
-        "/{user_id}",
-        response_description="Get a single user",
-        response_model=UserModel,
-        response_model_by_alias=False
-)
-async def show_user(id: str):
-    """
-    Get the record for a specific user, looked up by `id`.
-    """
-    if (
-        user := await UserService().get_user(id)
-    ) is not None: 
-        return user
-
-    raise HTTPException(status_code=404, detail=f"user {id} not found")
-
 @router.post(
     "/authentication",
     response_description="authenticate a single user by email and password",

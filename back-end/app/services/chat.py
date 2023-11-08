@@ -54,14 +54,16 @@ class ChatService():
         """
         try:
             client = OpenAI()
-            completion = client.chat.completions.create(
+            completion = await client.chat.completions.create(
+                
                 model="gpt-3.5-turbo",
                 messages=[
                        {"role": "system", "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."},
                        {"role": "user", "content": chat.message}
                        ]
                 )
-        except:
+        except Exception as e:
+            print(e)
             completion = mocked_response
 
         chat.answer = completion["choices"][0]["message"]["content"]
@@ -71,4 +73,5 @@ class ChatService():
         return {}
     
     async def find_messages_by_user(self, userId):
-        return ChatCollection(chats=await chat_collection.find({"sender": userId}).to_list(1000))    
+        sort = {'timestamp': 1}
+        return ChatCollection(chats=await chat_collection.find({"sender": userId}).sort(sort).to_list(1000)) 

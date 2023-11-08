@@ -29,7 +29,7 @@ class UserModel(BaseModel):
 
 class UserAuthModel(BaseModel):
     """
-        A set of optional updates to be made to a document in the database.
+        A set of vrified user associated with users.
     """
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     email: str

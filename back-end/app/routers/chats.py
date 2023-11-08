@@ -1,7 +1,5 @@
 from fastapi import APIRouter, Body, status, HTTPException
 from app.models.chat import ChatModel, ChatCollection
-from typing import Dict, List, Optional, Union
-
 
 
 from app.services.chat import ChatService
@@ -14,22 +12,22 @@ router = APIRouter(
 
 @router.get(
         "/{id}",
-        response_description="Get a single user",
+        response_description="Get all messages related to a user",
         response_model=ChatCollection,
         response_model_by_alias=False
 )
-async def show_user(id: str):
+async def get_message_by_user(id: str):
     """
     List all of the chat data related to a user in the database.
 
     The response is unpaginated and limited to 1000 results.
     """
     if (
-        user := await ChatService().find_messages_by_user(id)
+        chat := await ChatService().find_messages_by_user(id)
     ) is not None: 
-        return user
+        return chat
 
-    raise HTTPException(status_code=404, detail=f"user {id} not found")
+    raise HTTPException(status_code=404, detail=f"no messages for {id}")
 
 
 @router.post(
@@ -44,8 +42,11 @@ async def create_message(chat: ChatModel = Body(..., embed=True)):
     """
     Insert a new message record.
 
-    A unique `id` will be created and provided in the response.
+    A unique `id` will be created.
     """
-    created_chat = await ChatService().post_message(chat)
+    if (
+        await ChatService().post_message(chat)
+    ) is not None: 
+        return "done"
     
-    return "done"
+    raise HTTPException(status_code=404, detail=f"user {id} not found")
