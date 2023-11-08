@@ -2,7 +2,7 @@ import Layout from "@/components/layout/Layout";
 import { useState } from "react";
 import APIs from '../../utils/urls'
 import { useSearchParams } from 'next/navigation';
-import { create, getChatByUserId } from "./api";
+import { create } from "./api";
 import useSWR, { Fetcher } from 'swr'
 
 
