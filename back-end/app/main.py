@@ -1,4 +1,3 @@
-from typing import Union
 from .routers import chats, users
 
 from fastapi import FastAPI

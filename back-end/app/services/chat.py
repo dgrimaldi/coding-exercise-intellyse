@@ -1,6 +1,7 @@
 import datetime
 from openai import OpenAI
 import os
+from app.models.chat import ChatCollection
 from app.utils.database import chat_collection
 
 
@@ -67,6 +68,7 @@ class ChatService():
         chat.timestamp = datetime.datetime.now()
         await chat_collection.insert_one(
            chat.model_dump(by_alias=True, exclude=["id"]))
-
-        
         return {}
+    
+    async def find_messages_by_user(self, userId):
+        return ChatCollection(chats=await chat_collection.find({"sender": userId}).to_list(1000))    

@@ -14,7 +14,6 @@ function Index() {
     const [password, setPassword] = useState("")
 
     const handleSignUp = async () => {
-
         try {
             await create(email, password)
             handleLogin()
@@ -36,16 +35,9 @@ function Index() {
             } else 
                 router.push(`/chat?user=${data._id.$oid}`)
 
-
         } catch (error) {
             console.error(error)
         }
-  
-        // The return value is *not* serialized
-        // You can return Date, Map, Set, etc.
-        
-        
- 
     }
 
     return (
@@ -64,7 +56,6 @@ function Index() {
                    value={password}
                    type="password"
                    onChange={(e)=> setPassword(e.currentTarget.value)}
-
                />
             <button className="bg-indigo-500 rounded-full text-white" onClick={handleSignUp}>Sign Up</button>
             <button className="bg-indigo-500 rounded-full text-white" onClick={handleLogin}>Login</button>

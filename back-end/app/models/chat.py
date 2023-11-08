@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import Optional, List
 
 from datetime import datetime
-from pydantic import ConfigDict, BaseModel, Field, List
+from pydantic import ConfigDict, BaseModel, Field
 from app.utils.database import PyObjectId
 
 class ChatModel(BaseModel):
@@ -31,4 +31,4 @@ class ChatCollection(BaseModel):
     This exists because providing a top-level array in a JSON response can be a [vulnerability](https://haacked.com/archive/2009/06/25/json-hijacking.aspx/)
     """
 
-    students: List[ChatModel]
+    chats: List[ChatModel]

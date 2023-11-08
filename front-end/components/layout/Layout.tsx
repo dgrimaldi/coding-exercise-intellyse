@@ -15,9 +15,6 @@ const Layout = ({ children }: LayoutProps) => {
                             <li className="flex py-4 first:pt-0 last:pb-0 ">
                                 <button className="shadow-md border-solid border-2 border-sky-500 rounded p-2">Chat#1</button>
                             </li>
-                            <li className="flex py-4 first:pt-0 last:pb-0 ">
-                                <button className="shadow-md border-solid border-2 rounded p-2">Chat#2</button>
-                            </li>
                         </ul>
                     </div>
                 </nav>

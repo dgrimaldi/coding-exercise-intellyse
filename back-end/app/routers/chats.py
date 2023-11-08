@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Body, status, HTTPException
 from app.models.chat import ChatModel, ChatCollection
+from typing import Dict, List, Optional, Union
+
 
 
 from app.services.chat import ChatService
@@ -11,7 +13,7 @@ router = APIRouter(
 )
 
 @router.get(
-        "/",
+        "/{id}",
         response_description="Get a single user",
         response_model=ChatCollection,
         response_model_by_alias=False
@@ -23,7 +25,7 @@ async def show_user(id: str):
     The response is unpaginated and limited to 1000 results.
     """
     if (
-        user := await ChatService().find_chat(id)
+        user := await ChatService().find_messages_by_user(id)
     ) is not None: 
         return user
 
