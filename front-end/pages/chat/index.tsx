@@ -1,5 +1,39 @@
 import Layout from "@/components/layout/Layout";
+import { useState } from "react";
+import APIs from '../../utils/urls'
+import { useSearchParams } from 'next/navigation';
+import { create, getChatByUserId } from "./api";
+import useSWR, { Fetcher } from 'swr'
+
+
+
+
+
 const Chat = () => {
+    const [message, setMessage] = useState("")
+    const searchParams = useSearchParams();
+    const userId = searchParams?.get('user');
+
+    const fetcher: Fetcher<chat, string> = (id) => fetch(`${APIs.chatAPI}$userId=${id}`).then(res => res.json())
+ 
+    const { data, error } = useSWR(userId, fetcher)
+    console.log(data)
+
+
+    const handleSendMessage = async () => {
+        if(userId){        
+            try {
+                await create(message, userId.toString())
+            } catch (error) {
+                console.log(error)
+                throw new Error(`Failed to post new user message, ${error}/`)
+            }
+        }
+    }
+ 
+  if (error) return <div>Failed to load</div>
+  if (!data) return <div>Loading...</div>
+
     return (
         <Layout>
             {/*<div className="w-full h-full bg-white shadow-md rounded p-6">*/}
@@ -21,8 +55,10 @@ const Chat = () => {
                             type="text"
                             className="basis-11/12 p-2 border rounded-lg focus:outline-none row-start-2"
                             placeholder="Type a message..."
-                        />
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">Send</button>
+                            value={message}
+                            onChange={(e)=> setMessage(e.currentTarget.value)}
+                            />
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded-lg" onClick={handleSendMessage}>Send</button>
                     </div>
                 </div>
             </div>

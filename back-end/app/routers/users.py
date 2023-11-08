@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Body, HTTPException, status
 
-from app.models.user import UserModel
+from app.models.user import UserModel, UserAuthModel
 from app.services.user import UserService
+from bson import json_util
+from fastapi.responses import JSONResponse
+
 
 router = APIRouter(
     prefix="/users",
@@ -27,6 +30,22 @@ async def show_user(id: str):
 
     raise HTTPException(status_code=404, detail=f"user {id} not found")
 
+@router.post(
+    "/authentication",
+    response_description="authenticate a single user by email and password",
+    #response_model=PyObjectId,
+    response_model_by_alias=False
+)
+async def auth(auth_user: UserAuthModel = Body(...)):
+    """
+    Get the record for a specific user, looked up by `email` and `psw`.
+    """
+    if (
+        user := await UserService().user_auth(auth_user.email, auth_user.password)
+    ) is not None: 
+        return JSONResponse(content=json_util.dumps(user))
+
+    raise HTTPException(status_code=401, detail=f"Incorrect email or password")
 
 @router.post(
     "/",
