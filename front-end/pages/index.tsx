@@ -1,15 +1,16 @@
 import type { ReactElement } from 'react'
 import type { NextPageWithLayout } from './_app'
 import Login from './login'
+import Layout from '@/components/layout/Layout'
 
 
 const Page: NextPageWithLayout = () => {
-    return <div><Login /></div>
+    return <><Login /></>
 }
 
 Page.getLayout = function getLayout(page: ReactElement) {
     return (
-        <div>{page}</div>
+        <Layout navbar={<p className="font-mono" >ChatGPT-APP</p>}>{page}</Layout>
     )
 }
 
