@@ -63,15 +63,24 @@ class ChatService():
                        ]
                 )
         except Exception as e:
+            # TODO remove, workaround ralated to problem of openai api key, remove as soon as solved the key problem
             print(e)
             completion = mocked_response
 
         chat.answer = completion["choices"][0]["message"]["content"]
         chat.timestamp = datetime.datetime.now()
-        await chat_collection.insert_one(
-           chat.model_dump(by_alias=True, exclude=["id"]))
-        return {}
+        try:
+            await chat_collection.insert_one(
+                chat.model_dump(by_alias=True, exclude=["id"]))
+            return "done"
+        except Exception as e:
+            print("An exception occurred ::", e)
+            return None
     
     async def find_messages_by_user(self, userId):
         sort = {'timestamp': 1}
-        return ChatCollection(chats=await chat_collection.find({"sender": userId}).sort(sort).to_list(1000)) 
+        try: 
+            return ChatCollection(chats=await chat_collection.find({"sender": userId}).sort(sort).to_list(1000)) 
+        except Exception as e:
+            print("An exception occurred ::", e)
+            return None

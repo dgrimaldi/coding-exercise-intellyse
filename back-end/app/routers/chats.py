@@ -45,8 +45,8 @@ async def create_message(chat: ChatModel = Body(..., embed=True)):
     A unique `id` will be created.
     """
     if (
-        await ChatService().post_message(chat)
+        res := await ChatService().post_message(chat)
     ) is not None: 
-        return "done"
+        return res
     
-    raise HTTPException(status_code=404, detail=f"user {id} not found")
+    raise HTTPException(status_code=500, detail=f"Creation of a new message failed, try it again!")

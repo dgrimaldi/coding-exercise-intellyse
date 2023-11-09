@@ -15,7 +15,6 @@ router = APIRouter(
 @router.post(
     "/authentication",
     response_description="authenticate a single user by email and password",
-    #response_model=PyObjectId,
     response_model_by_alias=False
 )
 async def auth(auth_user: UserAuthModel = Body(...)):
@@ -42,6 +41,9 @@ async def create_user(user: UserModel = Body(...)):
 
     A unique `id` will be created and provided in the response.
     """
-    new_user = await UserService().post_user(user)
-    created_user = await UserService().get_user(new_user.inserted_id)
-    return created_user
+    try: 
+        new_user = await UserService().post_user(user)
+        created_user = await UserService().get_user(new_user.inserted_id)
+        return created_user
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Creation of a new user failed, try it again!")
