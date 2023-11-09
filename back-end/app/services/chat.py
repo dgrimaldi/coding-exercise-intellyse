@@ -1,7 +1,7 @@
 import datetime
 from openai import OpenAI
-import os
-from app.models.chat import ChatCollection
+from app.models.chat import ChatCollection, ChatModel
+from app.services.user import UserService
 from app.utils.database import chat_collection
 
 
@@ -27,9 +27,17 @@ mocked_response = {
 }
 
 
+async def is_user_exist(id):
+    try:
+        if (await UserService().get_user(id)) is not None:
+            return True
+        else:
+            return False
+    except:
+        return False
 
 class ChatService():
-    async def post_message(self, chat):
+    async def post_message(self, chat: ChatModel):
         """
         response_example = {
             "id": "chatcmpl-123",
@@ -52,6 +60,10 @@ class ChatService():
             }
         }
         """
+        if await is_user_exist(chat.sender) is False:
+            print("User not exist")
+            return None
+        
         try:
             client = OpenAI()
             completion = await client.chat.completions.create(
@@ -63,7 +75,7 @@ class ChatService():
                        ]
                 )
         except Exception as e:
-            # TODO remove, workaround ralated to problem of openai api key, remove as soon as solved the key problem
+            # TODO remove, workaround related to problem of openai api key, remove as soon as solved the key problem
             print(e)
             completion = mocked_response
 
@@ -78,6 +90,9 @@ class ChatService():
             return None
     
     async def find_messages_by_user(self, userId):
+        if await is_user_exist(userId) is False:
+            print("User not exist")
+            return None
         sort = {'timestamp': 1}
         try: 
             return ChatCollection(chats=await chat_collection.find({"sender": userId}).sort(sort).to_list(1000)) 

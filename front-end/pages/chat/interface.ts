@@ -5,3 +5,8 @@ type chat = {
     message: string
     answer: string
 }
+
+type CustomError = Error & {
+    info?: string,
+    status?: number
+}

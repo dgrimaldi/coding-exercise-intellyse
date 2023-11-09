@@ -2,7 +2,6 @@
 //TODO place at top small sm:place-content-start 
 
 import { useState } from "react"
-import APIs from '../../utils/urls'
 import { useRouter } from 'next/navigation'
 import { auth, create } from "./api"
 

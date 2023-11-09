@@ -1,9 +1,8 @@
 import Layout from "@/components/layout/Layout";
 import { useState } from "react";
-import APIs from '../../utils/urls'
 import { useSearchParams } from 'next/navigation';
-import { create } from "./api";
-import useSWR, { Fetcher } from 'swr'
+import { create, messageFetcher } from "./api";
+import useSWR from 'swr'
 import { useRef } from 'react';
 
 
@@ -16,9 +15,9 @@ const Chat = () => {
     const userId = searchParams?.get('user');
 
 
-    const fetcher: Fetcher<{chats: chat[]}, string> = (id) => fetch(`${APIs.chatAPI}/${id}`).then(res => res.json())
+
  
-    const { data, error, mutate } = useSWR(userId, fetcher, {
+    const { data, error, mutate } = useSWR(userId, messageFetcher, {
         revalidateOnFocus: false,
         revalidateOnReconnect: false
     })
@@ -54,7 +53,7 @@ const Chat = () => {
                                 <p>{`A: ${value.answer}`}</p>
                             </div> )
                         }
-                        <div  ref={messagesEndRef}/>
+                        <div ref={messagesEndRef}/>
                     </div>
                 </div>
                 <div className="absolute inset-x-0 bottom-0 basis-1/5 flex-none">
